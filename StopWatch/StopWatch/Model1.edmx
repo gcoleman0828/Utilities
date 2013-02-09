@@ -1,0 +1,371 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="dashModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityContainer Name="dashModelStoreContainer">
+          <EntitySet Name="Queries" EntityType="dashModel.Store.Queries" store:Type="Tables" Schema="userAnalytics" />
+          <EntitySet Name="URLs" EntityType="dashModel.Store.URLs" store:Type="Tables" Schema="userAnalytics" />
+          <EntitySet Name="UserAnalytics" EntityType="dashModel.Store.UserAnalytics" store:Type="Tables" Schema="userAnalytics" />
+          <AssociationSet Name="FK_Queries_URLs" Association="dashModel.Store.FK_Queries_URLs">
+            <End Role="URLs" EntitySet="URLs" />
+            <End Role="Queries" EntitySet="Queries" />
+          </AssociationSet>
+          <AssociationSet Name="FK_URLs_UserAnalytics" Association="dashModel.Store.FK_URLs_UserAnalytics">
+            <End Role="UserAnalytics" EntitySet="UserAnalytics" />
+            <End Role="URLs" EntitySet="URLs" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Queries">
+          <Key>
+            <PropertyRef Name="GUID" />
+          </Key>
+          <Property Name="GUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="URLGUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="QueryString" Type="varchar" Nullable="false" MaxLength="500" />
+          <Property Name="CreatedDTS" Type="datetime" Nullable="false" />
+          <Property Name="CreatedUser" Type="varchar" Nullable="false" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="URLs">
+          <Key>
+            <PropertyRef Name="GUID" />
+          </Key>
+          <Property Name="GUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="AnalyticsID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="URLString" Type="varchar" Nullable="false" MaxLength="500" />
+          <Property Name="CreatedDTS" Type="datetime" Nullable="false" />
+          <Property Name="CreatedUser" Type="varchar" Nullable="false" MaxLength="500" />
+        </EntityType>
+        <EntityType Name="UserAnalytics">
+          <Key>
+            <PropertyRef Name="GUID" />
+          </Key>
+          <Property Name="GUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="UserGUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Method" Type="varchar" Nullable="false" MaxLength="400" />
+          <Property Name="Area" Type="varchar" Nullable="false" MaxLength="400" />
+          <Property Name="Controller" Type="varchar" Nullable="false" MaxLength="400" />
+          <Property Name="Action" Type="varchar" Nullable="false" MaxLength="400" />
+          <Property Name="ClickCount" Type="int" Nullable="false" />
+          <Property Name="Favorites" Type="bit" Nullable="false" />
+          <Property Name="LastAccessedDTS" Type="datetime" />
+          <Property Name="CreatedDTS" Type="datetime" Nullable="false" />
+          <Property Name="CreatedUser" Type="varchar" Nullable="false" MaxLength="200" />
+        </EntityType>
+        <Association Name="FK_Queries_URLs">
+          <End Role="URLs" Type="dashModel.Store.URLs" Multiplicity="1" />
+          <End Role="Queries" Type="dashModel.Store.Queries" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="URLs">
+              <PropertyRef Name="GUID" />
+            </Principal>
+            <Dependent Role="Queries">
+              <PropertyRef Name="URLGUID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_URLs_UserAnalytics">
+          <End Role="UserAnalytics" Type="dashModel.Store.UserAnalytics" Multiplicity="1" />
+          <End Role="URLs" Type="dashModel.Store.URLs" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserAnalytics">
+              <PropertyRef Name="GUID" />
+            </Principal>
+            <Dependent Role="URLs">
+              <PropertyRef Name="AnalyticsID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="AddAllAnalytics" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="userAnalytics">
+          <Parameter Name="UserGUID" Type="uniqueidentifier" Mode="In" />
+          <Parameter Name="Method" Type="varchar" Mode="In" />
+          <Parameter Name="Area" Type="varchar" Mode="In" />
+          <Parameter Name="Controller" Type="varchar" Mode="In" />
+          <Parameter Name="Action" Type="varchar" Mode="In" />
+          <Parameter Name="Favorites" Type="bit" Mode="In" />
+          <Parameter Name="UserName" Type="varchar" Mode="In" />
+          <Parameter Name="URL" Type="varchar" Mode="In" />
+          <Parameter Name="QueryString" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="AddQueryString" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="userAnalytics">
+          <Parameter Name="URLID" Type="uniqueidentifier" Mode="In" />
+          <Parameter Name="QueryString" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="AddURL" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="userAnalytics">
+          <Parameter Name="AnalyticsID" Type="uniqueidentifier" Mode="In" />
+          <Parameter Name="URL" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="AddUserAnalytics" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="userAnalytics">
+          <Parameter Name="UserGUID" Type="uniqueidentifier" Mode="In" />
+          <Parameter Name="Method" Type="varchar" Mode="In" />
+          <Parameter Name="Area" Type="varchar" Mode="In" />
+          <Parameter Name="Controller" Type="varchar" Mode="In" />
+          <Parameter Name="Action" Type="varchar" Mode="In" />
+          <Parameter Name="Favorites" Type="bit" Mode="In" />
+          <Parameter Name="UserName" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="GetURLByID" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="userAnalytics">
+          <Parameter Name="URLID" Type="uniqueidentifier" Mode="In" />
+        </Function>
+        <Function Name="GetUserAnalyticsByID" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="userAnalytics">
+          <Parameter Name="AnalyticsID" Type="uniqueidentifier" Mode="In" />
+        </Function>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="dashModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="dashEntities" p1:LazyLoadingEnabled="true">
+          <EntitySet Name="Queries" EntityType="dashModel.Query" />
+          <EntitySet Name="URLs" EntityType="dashModel.URL" />
+          <EntitySet Name="UserAnalytics" EntityType="dashModel.UserAnalytic" />
+          <AssociationSet Name="FK_Queries_URLs" Association="dashModel.FK_Queries_URLs">
+            <End Role="URLs" EntitySet="URLs" />
+            <End Role="Queries" EntitySet="Queries" />
+          </AssociationSet>
+          <AssociationSet Name="FK_URLs_UserAnalytics" Association="dashModel.FK_URLs_UserAnalytics">
+            <End Role="UserAnalytics" EntitySet="UserAnalytics" />
+            <End Role="URLs" EntitySet="URLs" />
+          </AssociationSet>
+          <FunctionImport Name="AddQueryString">
+            <Parameter Name="URLID" Mode="In" Type="Guid" />
+            <Parameter Name="QueryString" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="AddURL" EntitySet="URLs" ReturnType="Collection(dashModel.URL)">
+            <Parameter Name="AnalyticsID" Mode="In" Type="Guid" />
+            <Parameter Name="URL" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="AddUserAnalytics" EntitySet="UserAnalytics" ReturnType="Collection(dashModel.UserAnalytic)">
+            <Parameter Name="UserGUID" Mode="In" Type="Guid" />
+            <Parameter Name="Method" Mode="In" Type="String" />
+            <Parameter Name="Area" Mode="In" Type="String" />
+            <Parameter Name="Controller" Mode="In" Type="String" />
+            <Parameter Name="Action" Mode="In" Type="String" />
+            <Parameter Name="Favorites" Mode="In" Type="Boolean" />
+            <Parameter Name="UserName" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="GetURLByID" ReturnType="Collection(dashModel.GetURLByID_Result)">
+          <Parameter Name="URLID" Mode="In" Type="Guid" />
+          </FunctionImport>
+          <FunctionImport Name="GetUserAnalyticsByID" ReturnType="Collection(dashModel.GetUserAnalyticsByID_Result)">
+          <Parameter Name="AnalyticsID" Mode="In" Type="Guid" />
+          </FunctionImport>
+          <FunctionImport Name="AddAllAnalytics">
+            <Parameter Name="UserGUID" Mode="In" Type="Guid" />
+            <Parameter Name="Method" Mode="In" Type="String" />
+            <Parameter Name="Area" Mode="In" Type="String" />
+            <Parameter Name="Controller" Mode="In" Type="String" />
+            <Parameter Name="Action" Mode="In" Type="String" />
+            <Parameter Name="Favorites" Mode="In" Type="Boolean" />
+            <Parameter Name="UserName" Mode="In" Type="String" />
+            <Parameter Name="URL" Mode="In" Type="String" />
+            <Parameter Name="QueryString" Mode="In" Type="String" />
+          </FunctionImport>
+        </EntityContainer>
+        <EntityType Name="Query">
+          <Key>
+            <PropertyRef Name="GUID" />
+          </Key>
+          <Property Name="GUID" Type="Guid" Nullable="false" />
+          <Property Name="URLGUID" Type="Guid" Nullable="false" />
+          <Property Name="QueryString" Type="String" Nullable="false" MaxLength="500" Unicode="false" FixedLength="false" />
+          <Property Name="CreatedDTS" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CreatedUser" Type="String" Nullable="false" MaxLength="100" Unicode="false" FixedLength="false" />
+          <NavigationProperty Name="URL" Relationship="dashModel.FK_Queries_URLs" FromRole="Queries" ToRole="URLs" />
+        </EntityType>
+        <EntityType Name="URL">
+          <Key>
+            <PropertyRef Name="GUID" />
+          </Key>
+          <Property Name="GUID" Type="Guid" Nullable="false" />
+          <Property Name="AnalyticsID" Type="Guid" Nullable="false" />
+          <Property Name="URLString" Type="String" Nullable="false" MaxLength="500" Unicode="false" FixedLength="false" />
+          <Property Name="CreatedDTS" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CreatedUser" Type="String" Nullable="false" MaxLength="500" Unicode="false" FixedLength="false" />
+          <NavigationProperty Name="Queries" Relationship="dashModel.FK_Queries_URLs" FromRole="URLs" ToRole="Queries" />
+          <NavigationProperty Name="UserAnalytic" Relationship="dashModel.FK_URLs_UserAnalytics" FromRole="URLs" ToRole="UserAnalytics" />
+        </EntityType>
+        <EntityType Name="UserAnalytic">
+          <Key>
+            <PropertyRef Name="GUID" />
+          </Key>
+          <Property Name="GUID" Type="Guid" Nullable="false" />
+          <Property Name="UserGUID" Type="Guid" Nullable="false" />
+          <Property Name="Method" Type="String" Nullable="false" MaxLength="400" Unicode="false" FixedLength="false" />
+          <Property Name="Area" Type="String" Nullable="false" MaxLength="400" Unicode="false" FixedLength="false" />
+          <Property Name="Controller" Type="String" Nullable="false" MaxLength="400" Unicode="false" FixedLength="false" />
+          <Property Name="Action" Type="String" Nullable="false" MaxLength="400" Unicode="false" FixedLength="false" />
+          <Property Name="ClickCount" Type="Int32" Nullable="false" />
+          <Property Name="Favorites" Type="Boolean" Nullable="false" />
+          <Property Name="LastAccessedDTS" Type="DateTime" Precision="3" />
+          <Property Name="CreatedDTS" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CreatedUser" Type="String" Nullable="false" MaxLength="200" Unicode="false" FixedLength="false" />
+          <NavigationProperty Name="URLs" Relationship="dashModel.FK_URLs_UserAnalytics" FromRole="UserAnalytics" ToRole="URLs" />
+        </EntityType>
+        <Association Name="FK_Queries_URLs">
+          <End Role="URLs" Type="dashModel.URL" Multiplicity="1" />
+          <End Role="Queries" Type="dashModel.Query" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="URLs">
+              <PropertyRef Name="GUID" />
+            </Principal>
+            <Dependent Role="Queries">
+              <PropertyRef Name="URLGUID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_URLs_UserAnalytics">
+          <End Role="UserAnalytics" Type="dashModel.UserAnalytic" Multiplicity="1" />
+          <End Role="URLs" Type="dashModel.URL" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserAnalytics">
+              <PropertyRef Name="GUID" />
+            </Principal>
+            <Dependent Role="URLs">
+              <PropertyRef Name="AnalyticsID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <ComplexType Name="AddURL_Result">
+          <Property Type="Guid" Name="GUID" Nullable="false" />
+          <Property Type="Guid" Name="AnalyticsID" Nullable="false" />
+          <Property Type="String" Name="URLString" Nullable="false" MaxLength="500" />
+          <Property Type="DateTime" Name="CreatedDTS" Nullable="false" Precision="23" />
+          <Property Type="String" Name="CreatedUser" Nullable="false" MaxLength="500" />
+        </ComplexType>
+        <ComplexType Name="AddUserAnalytics_Result">
+          <Property Type="Guid" Name="GUID" Nullable="false" />
+          <Property Type="Guid" Name="UserGUID" Nullable="false" />
+          <Property Type="String" Name="Method" Nullable="false" MaxLength="400" />
+          <Property Type="String" Name="Area" Nullable="false" MaxLength="400" />
+          <Property Type="String" Name="Controller" Nullable="false" MaxLength="400" />
+          <Property Type="String" Name="Action" Nullable="false" MaxLength="400" />
+          <Property Type="Int32" Name="ClickCount" Nullable="false" />
+          <Property Type="Boolean" Name="Favorites" Nullable="false" />
+          <Property Type="DateTime" Name="LastAccessedDTS" Nullable="false" Precision="23" />
+          <Property Type="DateTime" Name="CreatedDTS" Nullable="false" Precision="23" />
+          <Property Type="String" Name="CreatedUser" Nullable="false" MaxLength="200" />
+        </ComplexType>
+        <ComplexType Name="GetURLByID_Result">
+          <Property Type="Guid" Name="GUID" Nullable="false" />
+          <Property Type="Guid" Name="AnalyticsID" Nullable="false" />
+          <Property Type="String" Name="URLString" Nullable="false" MaxLength="500" />
+          <Property Type="DateTime" Name="CreatedDTS" Nullable="false" Precision="23" />
+          <Property Type="String" Name="CreatedUser" Nullable="false" MaxLength="500" />
+        </ComplexType>
+        <ComplexType Name="GetUserAnalyticsByID_Result">
+          <Property Type="Guid" Name="GUID" Nullable="false" />
+          <Property Type="Guid" Name="UserGUID" Nullable="false" />
+          <Property Type="String" Name="Method" Nullable="false" MaxLength="400" />
+          <Property Type="String" Name="Area" Nullable="false" MaxLength="400" />
+          <Property Type="String" Name="Controller" Nullable="false" MaxLength="400" />
+          <Property Type="String" Name="Action" Nullable="false" MaxLength="400" />
+          <Property Type="Int32" Name="ClickCount" Nullable="false" />
+          <Property Type="Boolean" Name="Favorites" Nullable="false" />
+          <Property Type="DateTime" Name="LastAccessedDTS" Nullable="false" Precision="23" />
+          <Property Type="DateTime" Name="CreatedDTS" Nullable="false" Precision="23" />
+          <Property Type="String" Name="CreatedUser" Nullable="false" MaxLength="200" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="dashModelStoreContainer" CdmEntityContainer="dashEntities">
+          <EntitySetMapping Name="Queries">
+            <EntityTypeMapping TypeName="dashModel.Query">
+              <MappingFragment StoreEntitySet="Queries">
+                <ScalarProperty Name="GUID" ColumnName="GUID" />
+                <ScalarProperty Name="URLGUID" ColumnName="URLGUID" />
+                <ScalarProperty Name="QueryString" ColumnName="QueryString" />
+                <ScalarProperty Name="CreatedDTS" ColumnName="CreatedDTS" />
+                <ScalarProperty Name="CreatedUser" ColumnName="CreatedUser" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="URLs">
+            <EntityTypeMapping TypeName="dashModel.URL">
+              <MappingFragment StoreEntitySet="URLs">
+                <ScalarProperty Name="GUID" ColumnName="GUID" />
+                <ScalarProperty Name="AnalyticsID" ColumnName="AnalyticsID" />
+                <ScalarProperty Name="URLString" ColumnName="URLString" />
+                <ScalarProperty Name="CreatedDTS" ColumnName="CreatedDTS" />
+                <ScalarProperty Name="CreatedUser" ColumnName="CreatedUser" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserAnalytics">
+            <EntityTypeMapping TypeName="dashModel.UserAnalytic">
+              <MappingFragment StoreEntitySet="UserAnalytics">
+                <ScalarProperty Name="GUID" ColumnName="GUID" />
+                <ScalarProperty Name="UserGUID" ColumnName="UserGUID" />
+                <ScalarProperty Name="Method" ColumnName="Method" />
+                <ScalarProperty Name="Area" ColumnName="Area" />
+                <ScalarProperty Name="Controller" ColumnName="Controller" />
+                <ScalarProperty Name="Action" ColumnName="Action" />
+                <ScalarProperty Name="ClickCount" ColumnName="ClickCount" />
+                <ScalarProperty Name="Favorites" ColumnName="Favorites" />
+                <ScalarProperty Name="LastAccessedDTS" ColumnName="LastAccessedDTS" />
+                <ScalarProperty Name="CreatedDTS" ColumnName="CreatedDTS" />
+                <ScalarProperty Name="CreatedUser" ColumnName="CreatedUser" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="AddQueryString" FunctionName="dashModel.Store.AddQueryString" />
+          <FunctionImportMapping FunctionImportName="AddURL" FunctionName="dashModel.Store.AddURL">
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="AddUserAnalytics" FunctionName="dashModel.Store.AddUserAnalytics">
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetURLByID" FunctionName="dashModel.Store.GetURLByID">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="dashModel.GetURLByID_Result">
+                <ScalarProperty Name="GUID" ColumnName="GUID" />
+                <ScalarProperty Name="AnalyticsID" ColumnName="AnalyticsID" />
+                <ScalarProperty Name="URLString" ColumnName="URLString" />
+                <ScalarProperty Name="CreatedDTS" ColumnName="CreatedDTS" />
+                <ScalarProperty Name="CreatedUser" ColumnName="CreatedUser" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetUserAnalyticsByID" FunctionName="dashModel.Store.GetUserAnalyticsByID">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="dashModel.GetUserAnalyticsByID_Result">
+                <ScalarProperty Name="GUID" ColumnName="GUID" />
+                <ScalarProperty Name="UserGUID" ColumnName="UserGUID" />
+                <ScalarProperty Name="Method" ColumnName="Method" />
+                <ScalarProperty Name="Area" ColumnName="Area" />
+                <ScalarProperty Name="Controller" ColumnName="Controller" />
+                <ScalarProperty Name="Action" ColumnName="Action" />
+                <ScalarProperty Name="ClickCount" ColumnName="ClickCount" />
+                <ScalarProperty Name="Favorites" ColumnName="Favorites" />
+                <ScalarProperty Name="LastAccessedDTS" ColumnName="LastAccessedDTS" />
+                <ScalarProperty Name="CreatedDTS" ColumnName="CreatedDTS" />
+                <ScalarProperty Name="CreatedUser" ColumnName="CreatedUser" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="AddAllAnalytics" FunctionName="dashModel.Store.AddAllAnalytics" />
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
